@@ -65,4 +65,28 @@ RSpec.describe "Api::V1::MenuItems", type: :request do
       end
     end
   end
+
+  describe "PUT /update" do
+    context "when menu item exists" do
+      it 'updates a menu item' do
+        first_menu_item_id = menu_items.first.id
+        put "/api/v1/menus/#{menu.id}/menu_items/#{first_menu_item_id}", params: { menu_item: { name: "Updated Item" } }
+        parsed_response = JSON.parse(response.body)
+
+        expect(response).to have_http_status(:ok)
+        expect(parsed_response['name']).to eq('Updated Item')
+      end
+    end
+
+    context "when menu item doesn't exist" do
+      it 'shows an error message' do
+        first_menu_item_id = menu_items.first.id
+        put "/api/v1/menus/#{menu.id}/menu_items/#{first_menu_item_id + 100}", params: { menu_item: { name: "Updated Item" } }
+        parsed_response = JSON.parse(response.body)
+
+        expect(response).to have_http_status(:not_found)
+        expect(parsed_response).to include("error" => "Menu Item Not Found")
+      end
+    end
+  end
 end
