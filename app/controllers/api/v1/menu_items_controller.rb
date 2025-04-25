@@ -1,6 +1,8 @@
 class Api::V1::MenuItemsController < ApplicationController
+  before_action :set_menu
+
   def index
-    render json: MenuItem.all
+    render json: @menu.menu_items
   end
 
   def show; end
@@ -10,4 +12,14 @@ class Api::V1::MenuItemsController < ApplicationController
   def update; end
 
   def destroy; end
+
+  private
+
+  def set_menu
+    begin
+      @menu = Menu.find(params[:menu_id])
+    rescue ActiveRecord::RecordNotFound
+      render json: { error: "Menu Not Found" }, status: :not_found
+    end
+  end
 end

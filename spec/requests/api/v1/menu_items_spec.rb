@@ -6,8 +6,13 @@ RSpec.describe "Api::V1::MenuItems", type: :request do
 
   describe "GET /index" do
     it 'returns a list of menu items' do
-      puts menu.inspect
-      puts menu_items.inspect
+      get "/api/v1/menus/#{menu.id}/menu_items"
+
+      expect(response).to have_http_status(:ok)
+      parsed_menus = JSON.parse(response.body)
+
+      expect(parsed_menus).to be_an(Array)
+      expect(parsed_menus.size).to eq(3)
     end
   end
 end
