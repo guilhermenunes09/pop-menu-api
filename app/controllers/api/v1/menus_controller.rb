@@ -1,5 +1,5 @@
 class Api::V1::MenusController < ApplicationController
-  before_action :set_menu, only: [:show]
+  before_action :set_menu, only: [:show, :update]
 
   def index
     render json: Menu.all
@@ -19,7 +19,13 @@ class Api::V1::MenusController < ApplicationController
     end
   end
 
-  def update; end
+  def update
+    if @menu.update(menu_params)
+      render json: @menu, status: :ok
+    else
+      render json: { message: menu.errors.full_messages ,error: "Not updated" }, status: :unprocessable_entity
+    end
+  end
 
   def destroy; end
 
