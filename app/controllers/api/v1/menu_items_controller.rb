@@ -1,13 +1,24 @@
 class Api::V1::MenuItemsController < ApplicationController
   before_action :set_menu
+  before_action :set_menu_item, only: [:show]
 
   def index
     render json: @menu.menu_items
   end
 
-  def show; end
+  def show
+    render json: @menu_item
+  end
 
-  def create; end
+  def create
+    menu_item = @menu.menu_items.new(menu_item_params)
+
+    if menu_item.save
+      render json: menu_item, status: :created
+    else
+      render json: { message: menu_item.errors.full_messages, error: "Not created" }, status: :unprocessable_entity
+    end
+  end
 
   def update; end
 
@@ -21,5 +32,17 @@ class Api::V1::MenuItemsController < ApplicationController
     rescue ActiveRecord::RecordNotFound
       render json: { error: "Menu Not Found" }, status: :not_found
     end
+  end
+
+  def set_menu_item
+    begin
+      @menu_item = @menu.menu_items.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      render json: { error: "Menu Item Not Found" }, status: :not_found
+    end
+  end
+
+  def menu_item_params
+    params.require(:menu_item).permit(:name, :price)
   end
 end
