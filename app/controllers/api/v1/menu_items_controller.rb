@@ -1,5 +1,7 @@
 class Api::V1::MenuItemsController < ApplicationController
-  def index; end
+  def index
+    render json: MenuItem.all
+  end
 
   def show; end
 
