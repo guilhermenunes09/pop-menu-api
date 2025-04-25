@@ -10,18 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_25_134805) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_25_135338) do
   create_table "menu_items", force: :cascade do |t|
     t.integer "menu_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name", null: false
+    t.decimal "price", precision: 10, scale: 2, null: false
+    t.text "description"
+    t.boolean "active", default: true
     t.index ["menu_id"], name: "index_menu_items_on_menu_id"
   end
 
   create_table "menus", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "name"
+    t.string "name", null: false
     t.string "description"
     t.boolean "active", default: true
   end
