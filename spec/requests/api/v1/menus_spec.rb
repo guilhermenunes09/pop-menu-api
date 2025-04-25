@@ -33,10 +33,32 @@ RSpec.describe "Api::V1::Menus", type: :request do
       it "returns a not found message" do
         first_menu_id = menus.first.id
         get "/api/v1/menus/#{first_menu_id + 10}"
-
         parsed_response = JSON.parse(response.body)
+
         expect(response).to have_http_status(:not_found)
         expect(parsed_response).to include("error" => "Menu Not Found")
+      end
+    end
+  end
+
+  describe "POST /create" do
+    context 'when params are valid' do
+      it 'creates a menu' do
+        post '/api/v1/menus', params: { menu: { name: 'Name' } }
+        parsed_response = JSON.parse(response.body)
+
+        expect(response).to have_http_status(:created)
+        expect(parsed_response['name']).to eq('Name')
+      end
+    end
+
+    context 'when params are not valid' do
+      it 'shows an error message' do
+        post '/api/v1/menus', params: { menu: { description: 'Missing Name' } }
+        parsed_response = JSON.parse(response.body)
+
+        expect(response).to have_http_status(422)
+        expect(parsed_response).to include("error" => "Not created")
       end
     end
   end

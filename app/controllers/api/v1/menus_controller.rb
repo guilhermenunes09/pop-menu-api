@@ -9,7 +9,15 @@ class Api::V1::MenusController < ApplicationController
     render json: @menu
   end
 
-  def create; end
+  def create
+    menu = Menu.new(menu_params)
+
+    if menu.save
+      render json: menu, status: :created
+    else
+      render json: { message: menu.errors.full_messages ,error: "Not created" }, status: :unprocessable_entity
+    end
+  end
 
   def update; end
 
@@ -23,5 +31,9 @@ class Api::V1::MenusController < ApplicationController
     rescue ActiveRecord::RecordNotFound
       render json: { error: "Menu Not Found" }, status: :not_found
     end
+  end
+
+  def menu_params
+    params.require(:menu).permit(:name, :description)
   end
 end
