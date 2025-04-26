@@ -21,7 +21,7 @@ RSpec.describe "Api::V1::MenuItems", type: :request do
       it 'returns a specific menu item' do
         first_menu_item_id = menu_items.first.id
 
-        get "/api/v1/menus/#{menu.id}/menu_items/#{first_menu_item_id}"
+        get "/api/v1/menu_items/#{first_menu_item_id}"
 
         expect(response).to have_http_status(:ok)
         menu_item = JSON.parse(response.body)
@@ -34,7 +34,7 @@ RSpec.describe "Api::V1::MenuItems", type: :request do
       it 'returns a not found message' do
         first_menu_item_id = menu_items.first.id
 
-        get "/api/v1/menus/#{menu.id}/menu_items/#{first_menu_item_id + 10}"
+        get "/api/v1/menu_items/#{first_menu_item_id + 10}"
         parsed_response = JSON.parse(response.body)
 
         expect(response).to have_http_status(:not_found)
@@ -70,7 +70,7 @@ RSpec.describe "Api::V1::MenuItems", type: :request do
     context "when menu item exists" do
       it 'updates a menu item' do
         first_menu_item_id = menu_items.first.id
-        put "/api/v1/menus/#{menu.id}/menu_items/#{first_menu_item_id}", params: { menu_item: { name: "Updated Item" } }
+        put "/api/v1/menu_items/#{first_menu_item_id}", params: { menu_item: { name: "Updated Item" } }
         parsed_response = JSON.parse(response.body)
 
         expect(response).to have_http_status(:ok)
@@ -81,7 +81,7 @@ RSpec.describe "Api::V1::MenuItems", type: :request do
     context "when menu item doesn't exist" do
       it 'shows an error message' do
         first_menu_item_id = menu_items.first.id
-        put "/api/v1/menus/#{menu.id}/menu_items/#{first_menu_item_id + 100}", params: { menu_item: { name: "Updated Item" } }
+        put "/api/v1/menu_items/#{first_menu_item_id + 100}", params: { menu_item: { name: "Updated Item" } }
         parsed_response = JSON.parse(response.body)
 
         expect(response).to have_http_status(:not_found)
@@ -94,7 +94,7 @@ RSpec.describe "Api::V1::MenuItems", type: :request do
     context 'when menu exists' do
       it 'deletes a menu' do
         first_menu_item_id = menu_items.first.id
-        delete "/api/v1/menus/#{menu.id}/menu_items/#{first_menu_item_id}"
+        delete "/api/v1/menu_items/#{first_menu_item_id}"
 
         expect(MenuItem.exists?(first_menu_item_id)).to be false
       end
@@ -103,7 +103,7 @@ RSpec.describe "Api::V1::MenuItems", type: :request do
     context "when menu doesn't exist" do
       it 'shows an error message' do
         first_menu_item_id = menu_items.first.id
-        delete "/api/v1/menus/#{menu.id}/menu_items/#{first_menu_item_id + 100}"
+        delete "/api/v1/menu_items/#{first_menu_item_id + 100}"
 
         parsed_response = JSON.parse(response.body)
         expect(response).to have_http_status(:not_found)
