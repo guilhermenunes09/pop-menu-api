@@ -5,4 +5,5 @@ class MenuItem < ApplicationRecord
 
   validates :price, presence: true
   validates :restaurant_id, presence: true
+  validates :name, presence: true, uniqueness: { scope: :restaurant_id }
 end
