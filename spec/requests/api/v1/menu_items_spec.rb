@@ -89,4 +89,26 @@ RSpec.describe "Api::V1::MenuItems", type: :request do
       end
     end
   end
+
+  describe "DELETE /destroy" do
+    context 'when menu exists' do
+      it 'deletes a menu' do
+        first_menu_item_id = menu_items.first.id
+        delete "/api/v1/menus/#{menu.id}/menu_items/#{first_menu_item_id}"
+
+        expect(MenuItem.exists?(first_menu_item_id)).to be false
+      end
+    end
+
+    context "when menu doesn't exist" do
+      it 'shows an error message' do
+        first_menu_item_id = menu_items.first.id
+        delete "/api/v1/menus/#{menu.id}/menu_items/#{first_menu_item_id + 100}"
+
+        parsed_response = JSON.parse(response.body)
+        expect(response).to have_http_status(:not_found)
+        expect(parsed_response).to include("error" => "Menu Item Not Found")
+      end
+    end
+  end
 end

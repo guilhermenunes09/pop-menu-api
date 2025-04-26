@@ -1,6 +1,6 @@
 class Api::V1::MenuItemsController < ApplicationController
   before_action :set_menu
-  before_action :set_menu_item, only: [:show, :update]
+  before_action :set_menu_item, only: [:show, :update, :destroy]
 
   def index
     render json: @menu.menu_items
@@ -28,7 +28,13 @@ class Api::V1::MenuItemsController < ApplicationController
     end
   end
 
-  def destroy; end
+  def destroy
+    if @menu_item.destroy
+      render json: { message: "Menu Item successfully deleted", menu_item_removed: @menu_item } , status: :ok
+    else
+      render json: { message: @menu_item.errors.full_messages ,error: "Not deleted" }, status: :unprocessable_entity
+    end
+  end
 
   private
 
