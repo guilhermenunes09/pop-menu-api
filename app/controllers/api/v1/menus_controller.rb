@@ -1,5 +1,5 @@
 class Api::V1::MenusController < ApplicationController
-  before_action :set_menu, only: [:show, :update, :destroy]
+  before_action :set_menu, only: [ :show, :update, :destroy ]
 
   def index
     render json: Menu.all
@@ -15,7 +15,7 @@ class Api::V1::MenusController < ApplicationController
     if menu.save
       render json: menu, status: :created
     else
-      render json: { message: menu.errors.full_messages ,error: "Not created" }, status: :unprocessable_entity
+      render json: { message: menu.errors.full_messages, error: "Not created" }, status: :unprocessable_entity
     end
   end
 
@@ -29,9 +29,9 @@ class Api::V1::MenusController < ApplicationController
 
   def destroy
     if @menu.destroy
-      render json: { message: "Menu successfully deleted", menu_removed: @menu } , status: :ok
+      render json: { message: "Menu successfully deleted", menu_removed: @menu }, status: :ok
     else
-      render json: { message: @menu.errors.full_messages ,error: "Not deleted" }, status: :unprocessable_entity
+      render json: { message: @menu.errors.full_messages, error: "Not deleted" }, status: :unprocessable_entity
     end
   end
 
