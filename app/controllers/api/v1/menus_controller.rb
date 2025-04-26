@@ -1,5 +1,5 @@
 class Api::V1::MenusController < ApplicationController
-  before_action :set_restaurant, only: [:index, :create]
+  before_action :set_restaurant, only: [ :index, :create ]
   before_action :set_menu, only: [ :show, :update, :destroy, :add_menu_item, :remove_menu_item ]
 
   def index
