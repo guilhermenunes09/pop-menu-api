@@ -1,9 +1,9 @@
 class Api::V1::MenuItemsController < ApplicationController
-  before_action :set_menu
+  before_action :set_restaurant
   before_action :set_menu_item, only: [ :show, :update, :destroy ]
 
   def index
-    render json: @menu.menu_items
+    render json: @restaurant.menu_items
   end
 
   def show
@@ -11,7 +11,7 @@ class Api::V1::MenuItemsController < ApplicationController
   end
 
   def create
-    menu_item = @menu.menu_items.new(menu_item_params)
+    menu_item = @restaurant.menu_items.new(menu_item_params)
 
     if menu_item.save
       render json: menu_item, status: :created
@@ -38,17 +38,17 @@ class Api::V1::MenuItemsController < ApplicationController
 
   private
 
-  def set_menu
+  def set_restaurant
     begin
-      @menu = Menu.find(params[:menu_id])
+      @restaurant = Restaurant.find(params[:restaurant_id])
     rescue ActiveRecord::RecordNotFound
-      render json: { error: "Menu Not Found" }, status: :not_found
+      render json: { error: "Restaurant Not Found" }, status: :not_found
     end
   end
 
   def set_menu_item
     begin
-      @menu_item = @menu.menu_items.find(params[:id])
+      @menu_item = @restaurant.menu_items.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       render json: { error: "Menu Item Not Found" }, status: :not_found
     end

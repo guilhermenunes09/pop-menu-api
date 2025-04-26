@@ -7,12 +7,14 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :menus do
-        resources :menu_items
+      resources :restaurants do
+        resources :menus do
+          post :add_menu_item, on: :member
+          delete :remove_menu_item, on: :member
+        end
+
+        resources :menu_items, only: [ :index, :show, :create, :update, :destroy ]
       end
     end
   end
-
-  # Defines the root path route ("/")
-  # root "posts#index"
 end

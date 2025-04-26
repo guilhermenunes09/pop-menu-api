@@ -1,8 +1,9 @@
 class Api::V1::MenusController < ApplicationController
-  before_action :set_menu, only: [ :show, :update, :destroy ]
+  before_action :set_restaurant
+  before_action :set_menu, only: [ :show, :update, :destroy, :add_menu_item, :remove_menu_item ]
 
   def index
-    render json: Menu.all
+    render json: @restaurant.menus
   end
 
   def show
@@ -10,7 +11,7 @@ class Api::V1::MenusController < ApplicationController
   end
 
   def create
-    menu = Menu.new(menu_params)
+    menu = @restaurant.menus.new(menu_params)
 
     if menu.save
       render json: menu, status: :created
@@ -35,11 +36,31 @@ class Api::V1::MenusController < ApplicationController
     end
   end
 
+  def add_menu_item
+    menu_item = MenuItem.find(params[:menu][:menu_item_id])
+    @menu.menu_items << menu_item
+    render json: { message: "Menu item added to menu" }, status: :ok
+  end
+
+  def remove_menu_item
+    menu_item = MenuItem.find(params[:menu][:menu_item_id])
+    @menu.menu_items.delete(menu_item)
+    render json: { message: "Menu item removed from menu" }, status: :ok
+  end
+
   private
+
+  def set_restaurant
+    begin
+      @restaurant = Restaurant.find(params[:restaurant_id])
+    rescue ActiveRecord::RecordNotFound
+      render json: { error: "Restaurant Not Found" }, status: :not_found
+    end
+  end
 
   def set_menu
     begin
-      @menu = Menu.find(params[:id])
+      @menu = @restaurant.menus.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       render json: { error: "Menu Not Found" }, status: :not_found
     end
