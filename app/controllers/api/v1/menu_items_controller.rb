@@ -1,9 +1,9 @@
 class Api::V1::MenuItemsController < ApplicationController
-  before_action :set_restaurant, only: [ :show, :create, :update, :destroy ]
+  before_action :set_restaurant
   before_action :set_menu_item, only: [ :show, :update, :destroy ]
 
   def index
-    render json: MenuItem.all
+    render json: @restaurant.menu_items
   end
 
   def show
