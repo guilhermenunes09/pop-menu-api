@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe "Api::V1::Menus", type: :request do
   let!(:restaurant) { create(:restaurant) }
   let!(:menus) { create_list(:menu, 3, restaurant: restaurant) }
+  let!(:menu_item) { create(:menu_item, restaurant: restaurant) }
 
   describe "GET /index" do
     it "returns a list of menus" do
@@ -111,6 +112,25 @@ RSpec.describe "Api::V1::Menus", type: :request do
         expect(response).to have_http_status(:not_found)
         expect(parsed_response).to include("error" => "Menu Not Found")
       end
+    end
+  end
+
+  describe 'POST /add_menu_item' do
+    it 'adds a menu item to the menu' do
+      first_menu = menus.first
+      post "/api/v1/menus/#{first_menu.id}/add_menu_item", params: { menu: { menu_item_id: menu_item.id }}
+      expect(response).to have_http_status(:ok)
+      expect(first_menu.menu_items).to include(menu_item)
+    end
+  end
+
+  describe 'DELETE /remove_menu_item' do
+    it 'removes a menu item from the menu' do
+      first_menu = menus.first
+      first_menu.menu_items << menu_item
+      delete "/api/v1/menus/#{first_menu.id}/remove_menu_item", params: { menu: { menu_item_id: menu_item.id }}
+      expect(response).to have_http_status(:ok)
+      expect(first_menu.menu_items).not_to include(menu_item)
     end
   end
 end
