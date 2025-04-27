@@ -8,6 +8,10 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :restaurants do
+        collection do
+          post :import_json
+        end
+
         resources :menus do
           post :add_menu_item, on: :member
           delete :remove_menu_item, on: :member
@@ -15,8 +19,6 @@ Rails.application.routes.draw do
 
         resources :menu_items, only: [ :index, :show, :create, :update, :destroy ]
       end
-
-      post "import_json", to: "restaurants#import_json"
     end
   end
 end

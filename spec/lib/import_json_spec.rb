@@ -8,7 +8,7 @@ RSpec.describe ImportJson do
   describe '#import' do
     context 'with valid JSON data' do
       before do
-        allow(File).to receive(:read).with(valid_json_file).and_return(valid_json_content)
+        allow(File).to receive(:read).with(valid_json_file.to_s).and_return(valid_json_content)
       end
 
       it 'imports data successfully and logs correct messages' do
@@ -27,7 +27,7 @@ RSpec.describe ImportJson do
 
     context 'with invalid JSON data' do
       before do
-        allow(File).to receive(:read).with(invalid_json_file).and_return(invalid_json_content)
+        allow(File).to receive(:read).with(invalid_json_file.to_s).and_return(invalid_json_content)
       end
 
       it 'collects errors and logs failure messages' do

@@ -36,8 +36,19 @@ class Api::V1::RestaurantsController < ApplicationController
   end
 
   def import_json
-    # implement import service
-    puts "controler import json"
+    if params[:file].nil?
+      render json: { error: "No file uploaded" }, status: :unprocessable_entity
+      return
+    end
+
+    importer = ImportJson.new(params[:file])
+    result = importer.import
+
+    if result.nil?
+      render json: { error: "Invalid file uploaded" }, status: :unprocessable_entity
+    else
+      render json: { import_result: result }, status: :ok
+    end
   end
 
   private

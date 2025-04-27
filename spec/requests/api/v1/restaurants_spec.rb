@@ -109,4 +109,92 @@ RSpec.describe "Api::V1::Restaurants", type: :request do
       end
     end
   end
+
+  describe "POST /import_json" do
+    let(:valid_json_file) { Rails.root.join('spec', 'fixtures', 'valid_restaurant_data.json') }
+    let(:invalid_json_file) { Rails.root.join('spec', 'fixtures', 'invalid_restaurant_data.json') }
+
+    context "with valid JSON file" do
+      before do
+        allow(File).to receive(:read).with(valid_json_file.to_s).and_return(valid_json_content)
+      end
+
+      it "imports data successfully and returns the result" do
+        post "/api/v1/restaurants/import_json", params: { file: valid_json_file }
+
+        expect(response).to have_http_status(:ok)
+        parsed_response = JSON.parse(response.body)
+
+        expect(parsed_response["import_result"]["success"]).to be true
+      end
+    end
+
+    context "with invalid JSON file" do
+      before do
+        allow(File).to receive(:read).with(invalid_json_file.to_s).and_return(invalid_json_content)
+      end
+
+      it "returns errors and logs failure messages" do
+        post "/api/v1/restaurants/import_json", params: { file: invalid_json_file }
+
+        expect(response).to have_http_status(:ok)
+        parsed_response = JSON.parse(response.body)
+
+        expect(parsed_response["import_result"]["success"]).to be false
+      end
+    end
+
+    context "without a file" do
+      it "returns an error message" do
+        post "/api/v1/restaurants/import_json"
+
+        expect(response).to have_http_status(422)
+        parsed_response = JSON.parse(response.body)
+
+        expect(parsed_response).to include("error" => "No file uploaded")
+      end
+    end
+  end
+
+  private
+
+  def valid_json_content
+    <<~JSON
+      {
+        "restaurants": [
+          {
+            "name": "Poppo's Cafe",
+            "menus": [
+              {
+                "name": "lunch",
+                "menu_items": [
+                  { "name": "Burger", "price": 9.00 }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    JSON
+  end
+
+  def invalid_json_content
+    <<~JSON
+      {
+        "restaurants": [
+          {
+            "name": "",
+            "menus": [
+              {
+                "name": "",
+                "menu_items": [
+                  { "name": "", "price": null }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    JSON
+  end
 end
