@@ -15,6 +15,8 @@ Rails.application.routes.draw do
 
         resources :menu_items, only: [ :index, :show, :create, :update, :destroy ]
       end
+
+      post "import_json", to: "restaurants#import_json"
     end
   end
 end

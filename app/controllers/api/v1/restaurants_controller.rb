@@ -35,6 +35,11 @@ class Api::V1::RestaurantsController < ApplicationController
     end
   end
 
+  def import_json
+    # implement import service
+    puts "controler import json"
+  end
+
   private
 
   def set_restaurant
