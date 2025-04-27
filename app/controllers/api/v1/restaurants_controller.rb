@@ -42,7 +42,7 @@ class Api::V1::RestaurantsController < ApplicationController
     end
 
     importer = ImportJson.new(params[:file])
-    result = importer.import
+    result = importer.import(force: params[:force] || false)
 
     if result.nil?
       render json: { error: "Invalid file uploaded" }, status: :unprocessable_entity
