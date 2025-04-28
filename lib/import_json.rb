@@ -146,11 +146,11 @@ class ImportJson
 
     content = if file.respond_to?(:read)
                 file.read
-              elsif file.is_a?(String) && File.exist?(file)
+    elsif file.is_a?(String) && File.exist?(file)
                 File.read(file)
-              else
+    else
                 raise ArgumentError, "Invalid file: must be an IO object or valid file path"
-              end
+    end
 
     parsed_content = JSON.parse(content, symbolize_names: true)
 
