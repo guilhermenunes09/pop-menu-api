@@ -86,7 +86,7 @@ You can import JSON data into the system by sending a `POST` request to the `/ap
 
 ```bash
 curl -X POST http://localhost:3000/api/v1/restaurants/import_json \
-  -F "file=@/path/to/your/restaurant_data.json" \
+  -F "file=@spec/fixtures/large_restaurant_data.json;type=application/json" \
   -F "force=false"
 ```
 
