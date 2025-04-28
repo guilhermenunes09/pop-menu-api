@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_26_154906) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_28_005413) do
   create_table "menu_item_menus", force: :cascade do |t|
     t.integer "menu_id", null: false
     t.integer "menu_item_id", null: false
@@ -48,8 +48,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_26_154906) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "menu_item_menus", "menu_items"
-  add_foreign_key "menu_item_menus", "menus"
-  add_foreign_key "menu_items", "restaurants"
-  add_foreign_key "menus", "restaurants"
+  add_foreign_key "menu_item_menus", "menu_items", on_delete: :cascade
+  add_foreign_key "menu_item_menus", "menus", on_delete: :cascade
+  add_foreign_key "menu_items", "restaurants", on_delete: :cascade
+  add_foreign_key "menus", "restaurants", on_delete: :cascade
 end
