@@ -1,0 +1,265 @@
+{
+  "restaurants": [
+    {
+      "name": "Poppo's Cafe",
+      "menus": [
+        {
+          "name": "Breakfast",
+          "menu_items": [
+            { "name": "Pancakes", "price": 7.50 },
+            { "name": "Omelette", "price": 8.00 },
+            { "name": "Waffles", "price": 6.75 }
+          ]
+        },
+        {
+          "name": "Lunch",
+          "menu_items": [
+            { "name": "Burger", "price": 9.00 },
+            { "name": "Sandwich", "price": 7.25 },
+            { "name": "Salad", "price": 8.50 }
+          ]
+        },
+        {
+          "name": "Dinner",
+          "menu_items": [
+            { "name": "Steak", "price": 15.00 },
+            { "name": "Pasta", "price": 12.00 },
+            { "name": "Seafood Platter", "price": 20.00 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Joe's Diner",
+      "menus": [
+        {
+          "name": "Breakfast",
+          "menu_items": [
+            { "name": "Bagel", "price": 4.00 },
+            { "name": "Toast", "price": 3.50 },
+            { "name": "Yogurt", "price": 5.00 }
+          ]
+        },
+        {
+          "name": "Lunch",
+          "menu_items": [
+            { "name": "Grilled Cheese", "price": 6.50 },
+            { "name": "Soup", "price": 5.75 },
+            { "name": "Pizza Slice", "price": 7.00 }
+          ]
+        },
+        {
+          "name": "Dinner",
+          "menu_items": [
+            { "name": "Chicken Parmesan", "price": 13.00 },
+            { "name": "Tacos", "price": 10.00 },
+            { "name": "BBQ Ribs", "price": 18.00 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "The Bistro",
+      "menus": [
+        {
+          "name": "Breakfast",
+          "menu_items": [
+            { "name": "Croissant", "price": 4.25 },
+            { "name": "Muffin", "price": 3.75 },
+            { "name": "Fruit Bowl", "price": 5.50 }
+          ]
+        },
+        {
+          "name": "Lunch",
+          "menu_items": [
+            { "name": "Sushi Roll", "price": 12.00 },
+            { "name": "Ramen", "price": 11.50 },
+            { "name": "Curry", "price": 10.75 }
+          ]
+        },
+        {
+          "name": "Dinner",
+          "menu_items": [
+            { "name": "Lobster", "price": 30.00 },
+            { "name": "Filet Mignon", "price": 25.00 },
+            { "name": "Duck Confit", "price": 22.00 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "The Grill House",
+      "menus": [
+        {
+          "name": "Breakfast",
+          "menu_items": [
+            { "name": "Eggs Benedict", "price": 9.50 },
+            { "name": "French Toast", "price": 8.25 },
+            { "name": "Hash Browns", "price": 4.00 }
+          ]
+        },
+        {
+          "name": "Lunch",
+          "menu_items": [
+            { "name": "Cheeseburger", "price": 10.00 },
+            { "name": "Hot Dog", "price": 6.00 },
+            { "name": "Fries", "price": 4.50 }
+          ]
+        },
+        {
+          "name": "Dinner",
+          "menu_items": [
+            { "name": "Ribeye Steak", "price": 28.00 },
+            { "name": "Grilled Salmon", "price": 24.00 },
+            { "name": "Shrimp Skewers", "price": 20.00 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "The Italian Spot",
+      "menus": [
+        {
+          "name": "Breakfast",
+          "menu_items": [
+            { "name": "Espresso", "price": 3.00 },
+            { "name": "Cappuccino", "price": 4.00 },
+            { "name": "Pastry", "price": 5.00 }
+          ]
+        },
+        {
+          "name": "Lunch",
+          "menu_items": [
+            { "name": "Margherita Pizza", "price": 12.00 },
+            { "name": "Spaghetti Carbonara", "price": 14.00 },
+            { "name": "Lasagna", "price": 13.50 }
+          ]
+        },
+        {
+          "name": "Dinner",
+          "menu_items": [
+            { "name": "Osso Buco", "price": 26.00 },
+            { "name": "Risotto", "price": 22.00 },
+            { "name": "Calamari", "price": 18.00 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "The Sushi Bar",
+      "menus": [
+        {
+          "name": "Breakfast",
+          "menu_items": [
+            { "name": "Miso Soup", "price": 5.00 },
+            { "name": "Onigiri", "price": 6.00 },
+            { "name": "Tamagoyaki", "price": 7.00 }
+          ]
+        },
+        {
+          "name": "Lunch",
+          "menu_items": [
+            { "name": "Sushi Combo", "price": 15.00 },
+            { "name": "Sashimi Plate", "price": 18.00 },
+            { "name": "Tempura", "price": 14.00 }
+          ]
+        },
+        {
+          "name": "Dinner",
+          "menu_items": [
+            { "name": "Omakase", "price": 50.00 },
+            { "name": "Unagi Don", "price": 28.00 },
+            { "name": "Spider Roll", "price": 22.00 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "The BBQ Joint",
+      "menus": [
+        {
+          "name": "Breakfast",
+          "menu_items": [
+            { "name": "Biscuits and Gravy", "price": 8.00 },
+            { "name": "Breakfast Burrito", "price": 9.00 },
+            { "name": "Cornbread", "price": 5.00 }
+          ]
+        },
+        {
+          "name": "Lunch",
+          "menu_items": [
+            { "name": "Brisket Sandwich", "price": 12.00 },
+            { "name": "Pulled Pork", "price": 11.00 },
+            { "name": "Mac and Cheese", "price": 7.00 }
+          ]
+        },
+        {
+          "name": "Dinner",
+          "menu_items": [
+            { "name": "Smoked Ribs", "price": 25.00 },
+            { "name": "Burnt Ends", "price": 20.00 },
+            { "name": "Beef Brisket", "price": 22.00 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "The Vegan Spot",
+      "menus": [
+        {
+          "name": "Breakfast",
+          "menu_items": [
+            { "name": "Avocado Toast", "price": 8.50 },
+            { "name": "Chia Pudding", "price": 7.00 },
+            { "name": "Smoothie Bowl", "price": 9.00 }
+          ]
+        },
+        {
+          "name": "Lunch",
+          "menu_items": [
+            { "name": "Vegan Burger", "price": 10.00 },
+            { "name": "Quinoa Salad", "price": 9.50 },
+            { "name": "Tofu Wrap", "price": 8.75 }
+          ]
+        },
+        {
+          "name": "Dinner",
+          "menu_items": [
+            { "name": "Vegan Curry", "price": 16.00 },
+            { "name": "Stuffed Peppers", "price": 14.00 },
+            { "name": "Vegan Pizza", "price": 15.00 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "The Dessert Shop",
+      "menus": [
+        {
+          "name": "Breakfast",
+          "menu_items": [
+            { "name": "Donut", "price": 3.00 },
+            { "name": "Danish", "price": 4.00 },
+            { "name": "Muffin", "price": 3.50 }
+          ]
+        },
+        {
+          "name": "Lunch",
+          "menu_items": [
+            { "name": "Cupcake", "price": 5.00 },
+            { "name": "Cookie", "price": 4.00 },
+            { "name": "Brownie", "price": 4.50 }
+          ]
+        },
+        {
+          "name": "Dinner",
+          "menu_items": [
+            { "name": "Cheesecake", "price": 8.00 },
+            { "name": "Ice Cream Sundae", "price": 7.50 },
+            { "name": "Apple Pie", "price": 6.50 }
+          ]
+        }
+      ]
+    }
+  ]
+}
