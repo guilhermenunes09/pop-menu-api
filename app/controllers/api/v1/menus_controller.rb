@@ -37,13 +37,23 @@ class Api::V1::MenusController < ApplicationController
   end
 
   def add_menu_item
-    menu_item = MenuItem.find(params[:menu][:menu_item_id])
+    begin
+      menu_item = MenuItem.find(params[:menu][:menu_item_id])
+    rescue ActiveRecord::RecordNotFound
+      return render json: { error: "Menu Item Not Found" }, status: :not_found
+    end
+
     @menu.menu_items << menu_item
     render json: { message: "Menu item added to menu" }, status: :ok
   end
 
   def remove_menu_item
-    menu_item = MenuItem.find(params[:menu][:menu_item_id])
+    begin
+      menu_item = MenuItem.find(params[:menu][:menu_item_id])
+    rescue ActiveRecord::RecordNotFound
+      return render json: { error: "Menu Item Not Found" }, status: :not_found
+    end
+
     @menu.menu_items.delete(menu_item)
     render json: { message: "Menu item removed from menu" }, status: :ok
   end

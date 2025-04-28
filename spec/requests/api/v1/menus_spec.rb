@@ -116,21 +116,48 @@ RSpec.describe "Api::V1::Menus", type: :request do
   end
 
   describe 'POST /add_menu_item' do
-    it 'adds a menu item to the menu' do
-      first_menu = menus.first
-      post "/api/v1/restaurants/#{restaurant.id}/menus/#{first_menu.id}/add_menu_item", params: { menu: { menu_item_id: menu_item.id } }
-      expect(response).to have_http_status(:ok)
-      expect(first_menu.menu_items).to include(menu_item)
+    context "when menu item exists" do
+      it 'adds a menu item to the menu' do
+        first_menu = menus.first
+        post "/api/v1/restaurants/#{restaurant.id}/menus/#{first_menu.id}/add_menu_item", params: { menu: { menu_item_id: menu_item.id } }
+        expect(response).to have_http_status(:ok)
+        expect(first_menu.menu_items).to include(menu_item)
+      end
+    end
+
+    context "when menu item doesn't exist" do
+      it 'shows an error message' do
+        first_menu = menus.first
+        post "/api/v1/restaurants/#{restaurant.id}/menus/#{first_menu.id + 100}/add_menu_item", params: { menu: { menu_item_id: menu_item.id } }
+
+        parsed_response = JSON.parse(response.body)
+        expect(response).to have_http_status(:not_found)
+        expect(parsed_response).to include("error" => "Menu Not Found")
+      end
     end
   end
 
   describe 'DELETE /remove_menu_item' do
-    it 'removes a menu item from the menu' do
-      first_menu = menus.first
-      first_menu.menu_items << menu_item
-      delete "/api/v1/restaurants/#{restaurant.id}/menus/#{first_menu.id}/remove_menu_item", params: { menu: { menu_item_id: menu_item.id } }
-      expect(response).to have_http_status(:ok)
-      expect(first_menu.menu_items).not_to include(menu_item)
+    context "when menu item exists" do
+      it 'removes a menu item from the menu' do
+        first_menu = menus.first
+        first_menu.menu_items << menu_item
+        delete "/api/v1/restaurants/#{restaurant.id}/menus/#{first_menu.id}/remove_menu_item", params: { menu: { menu_item_id: menu_item.id } }
+        expect(response).to have_http_status(:ok)
+        expect(first_menu.menu_items).not_to include(menu_item)
+      end
+    end
+
+    context "when menu item doesn't exist" do
+      it 'shows an error message' do
+        first_menu = menus.first
+        first_menu.menu_items << menu_item
+        delete "/api/v1/restaurants/#{restaurant.id}/menus/#{first_menu.id + 100}/remove_menu_item", params: { menu: { menu_item_id: menu_item.id } }
+
+        parsed_response = JSON.parse(response.body)
+        expect(response).to have_http_status(:not_found)
+        expect(parsed_response).to include("error" => "Menu Not Found")
+      end
     end
   end
 end
