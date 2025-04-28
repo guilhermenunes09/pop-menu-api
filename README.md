@@ -51,26 +51,27 @@ rails db:migrate
 
 These are the main routes available in the App. All routes have `/api/v1` as the prefix.
 
-| HTTP Verb | Route                                                                                     | Controller#Action                  | Description                                                                |
-|-----------|------------------------------------------------------------------------------------------|------------------------------------|-----------------------------------------------------------------------------|
-| POST      | `/api/v1/restaurants/import_json`                                                        | `api/v1/restaurants#import_json`   | Imports restaurant data from a **JSON file.** Supports a force: true param  |
-| GET       | `/api/v1/restaurants`                                                                    | `api/v1/restaurants#index`         | Retrieves a list of all restaurants.                                        |
-| POST      | `/api/v1/restaurants`                                                                    | `api/v1/restaurants#create`        | Creates a new restaurant.                                                   |
-| GET       | `/api/v1/restaurants/:id`                                                                | `api/v1/restaurants#show`          | Retrieves details of a specific restaurant by ID.                           |
-| PUT       | `/api/v1/restaurants/:id`                                                                | `api/v1/restaurants#update`        | Updates details of a specific restaurant by ID.                             |
-| DELETE    | `/api/v1/restaurants/:id`                                                                | `api/v1/restaurants#destroy`       | Deletes a specific restaurant by ID.                                        |
-| GET       | `/api/v1/restaurants/:restaurant_id/menus`                                               | `api/v1/menus#index`               | Retrieves a list of all menus for a specific restaurant.                    |
-| POST      | `/api/v1/restaurants/:restaurant_id/menus`                                               | `api/v1/menus#create`              | Creates a new menu for a specific restaurant.                               |
-| GET       | `/api/v1/restaurants/:restaurant_id/menus/:id`                                           | `api/v1/menus#show`                | Retrieves details of a specific menu by ID.                                 |
-| PUT       | `/api/v1/restaurants/:restaurant_id/menus/:id`                                           | `api/v1/menus#update`              | Updates details of a specific menu by ID.                                   |
-| DELETE    | `/api/v1/restaurants/:restaurant_id/menus/:id`                                           | `api/v1/menus#destroy`             | Deletes a specific menu by ID.                                              |
-| POST      | `/api/v1/restaurants/:restaurant_id/menus/:id/add_menu_item`                             | `api/v1/menus#add_menu_item`       | Adds a menu item to a specific menu.                                        |
-| DELETE    | `/api/v1/restaurants/:restaurant_id/menus/:id/remove_menu_item`                          | `api/v1/menus#remove_menu_item`    | Removes a menu item from a specific menu.                                   |
-| GET       | `/api/v1/restaurants/:restaurant_id/menu_items`                                          | `api/v1/menu_items#index`          | Retrieves a list of all menu items for a specific restaurant.               |
-| POST      | `/api/v1/restaurants/:restaurant_id/menu_items`                                          | `api/v1/menu_items#create`         | Creates a new menu item for a specific restaurant.                          |
-| GET       | `/api/v1/restaurants/:restaurant_id/menu_items/:id`                                      | `api/v1/menu_items#show`           | Retrieves details of a specific menu item by ID.                            |
-| PUT       | `/api/v1/restaurants/:restaurant_id/menu_items/:id`                                      | `api/v1/menu_items#update`         | Updates details of a specific menu item by ID.                              |
-| DELETE    | `/api/v1/restaurants/:restaurant_id/menu_items/:id`                                      | `api/v1/menu_items#destroy`        | Deletes a specific menu item by ID.                                         |
+| HTTP | Route                                                                                     |
+|-----------|------------------------------------------------------------------------------------------|
+| POST      | `/api/v1/restaurants/import_json`                                                        |
+| GET       | `/api/v1/restaurants`                                                                    |
+| POST      | `/api/v1/restaurants`                                                                    |
+| GET       | `/api/v1/restaurants/:id`                                                                |
+| PUT       | `/api/v1/restaurants/:id`                                                                |
+| DELETE    | `/api/v1/restaurants/:id`                                                                |
+| GET       | `/api/v1/restaurants/:restaurant_id/menus`                                               |
+| POST      | `/api/v1/restaurants/:restaurant_id/menus`                                               |
+| GET       | `/api/v1/restaurants/:restaurant_id/menus/:id`                                           |
+| PUT       | `/api/v1/restaurants/:restaurant_id/menus/:id`                                           |
+| DELETE    | `/api/v1/restaurants/:restaurant_id/menus/:id`                                           |
+| POST      | `/api/v1/restaurants/:restaurant_id/menus/:id/add_menu_item`                             |
+| DELETE    | `/api/v1/restaurants/:restaurant_id/menus/:id/remove_menu_item`                          |
+| GET       | `/api/v1/restaurants/:restaurant_id/menu_items`                                          |
+| POST      | `/api/v1/restaurants/:restaurant_id/menu_items`                                          |
+| GET       | `/api/v1/restaurants/:restaurant_id/menu_items/:id`                                      |
+| PUT       | `/api/v1/restaurants/:restaurant_id/menu_items/:id`                                      |
+| DELETE    | `/api/v1/restaurants/:restaurant_id/menu_items/:id`                                      |
+
 
 ## Tests
 
