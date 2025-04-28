@@ -16,19 +16,19 @@ RSpec.describe "Api::V1::Restaurants", type: :request do
   end
 
   describe "GET /show" do
-    context "menu exists" do
-      it "returns the selected menu" do
+    context "restaurant exists" do
+      it "returns the selected restaurant" do
         first_restaurant_id = restaurants.first.id
         get "/api/v1/restaurants/#{first_restaurant_id}"
 
         expect(response).to have_http_status(:ok)
-        menu = JSON.parse(response.body)
+        restaurant = JSON.parse(response.body)
 
-        expect(menu["id"]).to eq(first_restaurant_id)
+        expect(restaurant["id"]).to eq(first_restaurant_id)
       end
     end
 
-    context "menu doesn't exist" do
+    context "restaurant doesn't exist" do
       it "returns a not found message" do
         first_restaurant_id = restaurants.first.id
         get "/api/v1/restaurants/#{first_restaurant_id + 100}"
@@ -43,7 +43,7 @@ RSpec.describe "Api::V1::Restaurants", type: :request do
 
   describe "POST /create" do
     context 'when params are valid' do
-      it 'creates a menu' do
+      it 'creates a restaurant' do
         post "/api/v1/restaurants", params: { restaurant: { name: 'Name' } }
         parsed_response = JSON.parse(response.body)
 
@@ -54,7 +54,7 @@ RSpec.describe "Api::V1::Restaurants", type: :request do
 
     context 'when params are not valid' do
       it 'shows an error message' do
-        post "/api/v1/restaurants", params: { restaurant: { description: 'Missing Name'  } }
+        post "/api/v1/restaurants", params: { restaurant: { description: 'Missing Name' } }
 
         parsed_response = JSON.parse(response.body)
 
@@ -65,8 +65,8 @@ RSpec.describe "Api::V1::Restaurants", type: :request do
   end
 
   describe "PUT /update" do
-    context 'when menu exists' do
-      it 'updates a menu' do
+    context 'when restaurant exists' do
+      it 'updates a restaurant' do
         first_restaurant_id = restaurants.first.id
         put "/api/v1/restaurants/#{first_restaurant_id}", params: { restaurant: { name: 'Name Updated' } }
 
@@ -76,7 +76,7 @@ RSpec.describe "Api::V1::Restaurants", type: :request do
       end
     end
 
-    context "when menu doesn't exist" do
+    context "when restaurant doesn't exist" do
       it 'shows an error message' do
         first_restaurant_id = restaurants.first.id
         put "/api/v1/restaurants/#{first_restaurant_id + 100}", params: { restaurant: { name: 'Name Updated' } }
@@ -89,16 +89,16 @@ RSpec.describe "Api::V1::Restaurants", type: :request do
   end
 
   describe "DELETE /destroy" do
-    context 'when menu exists' do
-      it 'deletes a menu' do
+    context 'when restaurant exists' do
+      it 'deletes a restaurant' do
         first_restaurant_id = restaurants.first.id
         delete "/api/v1/restaurants/#{first_restaurant_id}"
 
-        expect(Menu.exists?(first_restaurant_id)).to be false
+        expect(Restaurant.exists?(first_restaurant_id)).to be false
       end
     end
 
-    context "when menu doesn't exist" do
+    context "when restaurant doesn't exist" do
       it 'shows an error message' do
         first_restaurant_id = restaurants.first.id
         delete "/api/v1/restaurants/#{first_restaurant_id + 100}"
@@ -111,14 +111,21 @@ RSpec.describe "Api::V1::Restaurants", type: :request do
   end
 
   describe "POST /import_json" do
-    let(:valid_json_file) { Rails.root.join('spec', 'fixtures', 'valid_restaurant_data.json') }
-    let(:invalid_json_file) { Rails.root.join('spec', 'fixtures', 'invalid_restaurant_data.json') }
+    let(:valid_json_file) do
+      Rack::Test::UploadedFile.new(
+        Rails.root.join('spec', 'fixtures', 'valid_restaurant_data.json'),
+        'application/json'
+      )
+    end
+
+    let(:invalid_json_file) do
+      Rack::Test::UploadedFile.new(
+        Rails.root.join('spec', 'fixtures', 'invalid_restaurant_data.json'),
+        'application/json'
+      )
+    end
 
     context "with valid JSON file" do
-      before do
-        allow(File).to receive(:read).with(valid_json_file.to_s).and_return(valid_json_content)
-      end
-
       it "imports data successfully and returns the result" do
         post "/api/v1/restaurants/import_json", params: { file: valid_json_file }
 
@@ -130,10 +137,6 @@ RSpec.describe "Api::V1::Restaurants", type: :request do
     end
 
     context "with invalid JSON file" do
-      before do
-        allow(File).to receive(:read).with(invalid_json_file.to_s).and_return(invalid_json_content)
-      end
-
       it "returns errors and logs failure messages" do
         post "/api/v1/restaurants/import_json", params: { file: invalid_json_file }
 

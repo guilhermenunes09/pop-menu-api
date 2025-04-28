@@ -1,0 +1,15 @@
+{
+  "restaurants": [
+    {
+      "name": "",
+      "menus": [
+        {
+          "name": "",
+          "menu_items": [
+            { "name": "", "price": null }
+          ]
+        }
+      ]
+    }
+  ]
+}

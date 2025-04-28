@@ -2,21 +2,24 @@ require "json"
 
 class ImportJson
   def initialize(file)
-    @file = file
-    @content = get_file_content(file)
     @errors_collector = []
     @logs = []
     @messages = []
+    @file = file
+    @content = parse_file_content(file)
   end
 
   def import(force: false)
+    return error_result("No valid file content") unless @content
+
     if force
       import_without_transaction
       @messages << "[Warning] (Forced) There are errors, but valid items have been saved." if @errors_collector.any?
     else
       import_with_transaction
-      @messages << "[Success] All data was saved successfully!" if @errors_collector.empty?
     end
+
+    @messages << "[Success] All data was saved successfully!" if @errors_collector.empty?
 
     {
       messages: @messages,
@@ -31,7 +34,7 @@ class ImportJson
       process_data(force: false)
     rescue StandardError => e
       @errors_collector << "Transaction failed: #{e.message}"
-      @messages  << "[Warning] No data was saved: Please fix the issues and try again."
+      @messages << "[Warning] No data was saved: Please fix the issues and try again."
       raise ActiveRecord::Rollback
     end
   end
@@ -40,9 +43,10 @@ class ImportJson
     process_data(force: true)
   end
 
-  def process_data(force:)
-    return nil unless is_file_valid(@file)
 
+  private
+
+  def process_data(force:)
     @content[:restaurants].each do |restaurant_hash|
       restaurant = Restaurant.new(name: restaurant_hash[:name])
 
@@ -68,60 +72,52 @@ class ImportJson
       next unless restaurant.persisted?
 
       restaurant_hash[:menus].each do |menu_hash|
-        menu = Menu.new(name: menu_hash[:name], restaurant_id: restaurant.id)
-
-        begin
-          menu.save!
-          @logs << "- Menu #{menu_hash[:name]} from restaurant #{restaurant.name} ok"
-        rescue ActiveRecord::RecordInvalid => e
-          handle_error(
-            message: "Menu: Validation failed: #{e.message}",
-            log_message: "X Menu #{menu_hash[:name]} from restaurant #{restaurant.name} failed",
-            force: force,
-            exception: e
-          )
-        rescue StandardError => e
-          handle_error(
-            message: "Menu: Unknown error: #{e.message}",
-            log_message: "X Menu #{menu_hash[:name]} from restaurant #{restaurant.name} failed",
-            force: force,
-            exception: e
-          )
-        end
-
-        # Menu items can be created before menus exist
-        # since they can be added to multiple menus
-
-        if menu_hash[:menu_items]
-          menu_hash[:menu_items].each do |menu_item_hash|
-            save_menu_item(name: menu_item_hash[:name], price: menu_item_hash[:price], restaurant_id: restaurant.id, force: force)
-          end
-        end
-
-        if menu_hash[:dishes]
-          menu_hash[:dishes].each do |menu_item_hash|
-            save_menu_item(name: menu_item_hash[:name], price: menu_item_hash[:price], restaurant_id: restaurant.id, force: force)
-          end
-        end
+        process_menu(menu_hash, restaurant, force)
       end
     end
   end
 
-  private
+  def process_menu(menu_hash, restaurant, force)
+    menu = Menu.new(name: menu_hash[:name], restaurant_id: restaurant.id)
 
-  def handle_error(message:, log_message:, force:, exception:)
-    @errors_collector << message
-    @logs << log_message
+    begin
+      menu.save!
+      @logs << "- Menu #{menu_hash[:name]} from restaurant #{restaurant.name} ok"
+    rescue ActiveRecord::RecordInvalid => e
+      handle_error(
+        message: "Menu: Validation failed: #{e.message}",
+        log_message: "X Menu #{menu_hash[:name]} from restaurant #{restaurant.name} failed",
+        force: force,
+        exception: e
+      )
+      return
+    rescue StandardError => e
+      handle_error(
+        message: "Menu: Unknown error: #{e.message}",
+        log_message: "X Menu #{menu_hash[:name]} from restaurant #{restaurant.name} failed",
+        force: force,
+        exception: e
+      )
+      return
+    end
 
-    if force
-      nil
-    else
-      raise exception
+    process_menu_items(menu_hash[:menu_items], restaurant.id, force) if menu_hash[:menu_items]
+    process_menu_items(menu_hash[:dishes], restaurant.id, force) if menu_hash[:dishes]
+  end
+
+  def process_menu_items(items, restaurant_id, force)
+    items.each do |item_hash|
+      save_menu_item(
+        name: item_hash[:name],
+        price: item_hash[:price],
+        restaurant_id: restaurant_id,
+        force: force
+      )
     end
   end
 
   def save_menu_item(name:, price:, restaurant_id:, force:)
-    menu_item = MenuItem.new(name:, price:, restaurant_id:)
+    menu_item = MenuItem.new(name: name, price: price, restaurant_id: restaurant_id)
 
     begin
       menu_item.save!
@@ -143,35 +139,42 @@ class ImportJson
     end
   end
 
-  def is_file_valid(file)
-    unless file
-      @errors_collector << "No file uploaded"
-      return false
+  def parse_file_content(file)
+    if file.respond_to?(:content_type)
+      return unless file.content_type == "application/json"
     end
 
-    is_valid_json = if file.respond_to?(:content_type)
-                      file.content_type == "application/json"
-    else
-                      file.to_s.downcase.end_with?(".json")
-    end
-
-    unless is_valid_json
-      @errors_collector << "Invalid file type. Only JSON files are allowed."
-      return false
-    end
-
-    true
-  end
-
-  def get_file_content(file)
     content = if file.respond_to?(:read)
                 file.read
-    elsif file.is_a?(String)
+              elsif file.is_a?(String) && File.exist?(file)
                 File.read(file)
-    else
-                raise "Invalid file type: #{file.class.name}"
+              else
+                raise ArgumentError, "Invalid file: must be an IO object or valid file path"
+              end
+
+    parsed_content = JSON.parse(content, symbolize_names: true)
+
+    unless parsed_content.is_a?(Hash) && parsed_content.key?(:restaurants)
+      @errors_collector << "Invalid file structure: Expected a hash with a :restaurants key"
+      return nil
     end
 
-    JSON.parse(content).with_indifferent_access
+    parsed_content
+  end
+
+  def handle_error(message:, log_message:, force:, exception:)
+    @errors_collector << message
+    @logs << log_message
+    raise exception unless force
+  end
+
+  def error_result(message)
+    @errors_collector << message
+    {
+      messages: [],
+      success: false,
+      errors: @errors_collector,
+      logs: []
+    }
   end
 end
