@@ -89,7 +89,8 @@ class ImportJson
           )
         end
 
-        next unless menu.persisted?
+        # Menu items can be created before menus exist
+        # since they can be added to multiple menus
 
         if menu_hash[:menu_items]
           menu_hash[:menu_items].each do |menu_item_hash|
