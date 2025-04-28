@@ -36,15 +36,32 @@ RSpec.describe Restaurant, type: :model do
   end
 
   describe "validations" do
+    let(:restaurant) { build(:restaurant) }
+
     it "is valid with a name" do
-      restaurant = build(:restaurant, name: "Tasty Bites")
+      restaurant.name = "Tasty Bites"
       expect(restaurant).to be_valid
     end
 
     it "is invalid without a name" do
-      restaurant = build(:restaurant, name: nil)
+      restaurant.name = nil
       expect(restaurant).not_to be_valid
       expect(restaurant.errors[:name]).to include("can't be blank")
+    end
+
+    context "when name is too long" do
+      it "is invalid with more than 100 characters" do
+        restaurant.name = "a" * 300
+        expect(restaurant).not_to be_valid
+        expect(restaurant.errors[:name]).to include("is too long (maximum is 200 characters)")
+      end
+    end
+
+    context "when name is at maximum length" do
+      it "is valid with exactly 200 characters" do
+        restaurant.name = "a" * 100
+        expect(restaurant).to be_valid
+      end
     end
   end
 end
